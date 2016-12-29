@@ -2,15 +2,15 @@ CONFIG -=qt
 
 DEFINES +=GLX_DIRECT_RENDERING
 
-TARGET = glxgears
+TARGET = eglgears
 
 INCLUDEPATH += $$PWD/mesa/include
 INCLUDEPATH += $$PWD/mesa/src/mesa
 INCLUDEPATH += $$PWD/mesa/src/mapi
 INCLUDEPATH += $$PWD/mesa/src/mapi/glapi
-INCLUDEPATH += $$PWD/mesa/examples
+INCLUDEPATH += $$PWD/examples
 
-OTHER_FILES += $$PWD/mesa/examples/Makefile
+#OTHER_FILES += $$PWD/examples/Makefile
 
 HEADERS += \
     mesa/include/c11/threads.h \
@@ -4012,5 +4012,5 @@ SOURCES += \
     mesa/src/util/u_vector.c \
     mesa/src/vulkan/wsi/wsi_common_wayland.c \
     mesa/src/vulkan/wsi/wsi_common_x11.c \
-    mesa/examples/glxgears.c
+    examples/eglgears.c
 
