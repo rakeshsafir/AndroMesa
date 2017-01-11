@@ -10,7 +10,7 @@ INCLUDEPATH += $$PWD/mesa/src/mapi
 INCLUDEPATH += $$PWD/mesa/src/mapi/glapi
 INCLUDEPATH += $$PWD/examples
 
-#OTHER_FILES += $$PWD/examples/Makefile
+OTHER_FILES += $$PWD/findings.txt
 
 HEADERS += \
     mesa/include/c11/threads.h \
