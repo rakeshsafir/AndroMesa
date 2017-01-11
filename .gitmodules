@@ -1,6 +1,6 @@
-[submodule "mesa"]
-	path = mesa
-	url = https://github.com/freedreno-zz/mesa.git
 [submodule "libdrm"]
 	path = libdrm
 	url = https://github.com/freedreno-zz/libdrm.git
+[submodule "mesa"]
+	path = mesa
+	url = https://github.com/freedreno/mesa.git
