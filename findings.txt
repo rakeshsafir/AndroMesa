@@ -1,3 +1,12 @@
+#--------[ Building for x86 ]---------
+# libclc
+
+./configure --enable-opencl --enable-opencl-icd
+
+
+
+
+
 # Every dri driver has to implement
 struct __DriverAPIRec {
     const __DRIconfig **(*InitScreen) (__DRIscreen * priv);
@@ -7,11 +16,11 @@ struct __DriverAPIRec {
     GLboolean (*CreateContext)(gl_api api,
                                const struct gl_config *glVis,
                                __DRIcontext *driContextPriv,
-			       unsigned major_version,
-			       unsigned minor_version,
-			       uint32_t flags,
+                               unsigned major_version,
+                               unsigned minor_version,
+                               uint32_t flags,
                                bool notify_reset,
-			       unsigned *error,
+                               unsigned *error,
                                void *sharedContextPrivate);
 
     void (*DestroyContext)(__DRIcontext *driContextPriv);
