@@ -1,0 +1,47 @@
+# Every dri driver has to implement
+struct __DriverAPIRec {
+    const __DRIconfig **(*InitScreen) (__DRIscreen * priv);
+
+    void (*DestroyScreen)(__DRIscreen *driScrnPriv);
+
+    GLboolean (*CreateContext)(gl_api api,
+                               const struct gl_config *glVis,
+                               __DRIcontext *driContextPriv,
+			       unsigned major_version,
+			       unsigned minor_version,
+			       uint32_t flags,
+                               bool notify_reset,
+			       unsigned *error,
+                               void *sharedContextPrivate);
+
+    void (*DestroyContext)(__DRIcontext *driContextPriv);
+
+    GLboolean (*CreateBuffer)(__DRIscreen *driScrnPriv,
+                              __DRIdrawable *driDrawPriv,
+                              const struct gl_config *glVis,
+                              GLboolean pixmapBuffer);
+
+    void (*DestroyBuffer)(__DRIdrawable *driDrawPriv);
+
+    void (*SwapBuffers)(__DRIdrawable *driDrawPriv);
+
+    GLboolean (*MakeCurrent)(__DRIcontext *driContextPriv,
+                             __DRIdrawable *driDrawPriv,
+                             __DRIdrawable *driReadPriv);
+
+    GLboolean (*UnbindContext)(__DRIcontext *driContextPriv);
+
+    __DRIbuffer *(*AllocateBuffer) (__DRIscreen *screenPrivate,
+                                    unsigned int attachment,
+                                    unsigned int format,
+                                    int width, int height);
+
+    void (*ReleaseBuffer) (__DRIscreen *screenPrivate, __DRIbuffer *buffer);
+
+    void (*CopySubBuffer)(__DRIdrawable *driDrawPriv, int x, int y,
+                          int w, int h);
+};
+
+driCreateNewScreen2() keeps this pointer in psp->driver and uses it to create screen
+
+
