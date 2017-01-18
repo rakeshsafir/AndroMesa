@@ -51,12 +51,12 @@ function build_libdrm() {
 }
 
 function download_and_setup_llvm4_0() {
-	if [ -z $(cat /etc/apt/sources.list | grep llvm-toolchain-xenial-4.0) ]; then
-		sudo sh -c "wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -"
-		sudo sh -c "echo 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main' >> /etc/apt/sources.list"
-		sudo sh -c "echo 'deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main' >> /etc/apt/sources.list"
-		sudo apt-get update
-	fi
+#	if [ -z $(cat /etc/apt/sources.list | grep llvm-toolchain-xenial-4.0) ]; then
+#		sudo sh -c "wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -"
+#		sudo sh -c "echo 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main' >> /etc/apt/sources.list"
+#		sudo sh -c "echo 'deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main' >> /etc/apt/sources.list"
+#		sudo apt-get update
+#	fi
 
 	local LLVM_PACKAGE_LIST=(clang-4.0 
 		clang-4.0-doc 
@@ -82,7 +82,7 @@ function download_and_setup_llvm4_0() {
 		echo -n "Checking ["$((i+1))"/${#LLVM_PACKAGE_LIST[@]}]:{${LLVM_PACKAGE_LIST[$i]}} => "
 		if [[ -z $(dpkg -l | grep ${LLVM_PACKAGE_LIST[$i]} | awk '{print $2, $3}') ]]; then
 			echo -n "Installing [${LLVM_PACKAGE_LIST[$i]}]..."
-			apt-get install -y ${LLVM_PACKAGE_LIST[$i]} 2>&1 > /dev/null
+			sudo sh -c "apt-get install -y ${LLVM_PACKAGE_LIST[$i]} 2>&1 > /dev/null"
 			if [[ $? -eq 0 ]]; then
 				echo "Success..."
 			else
@@ -138,7 +138,7 @@ function build_libclc() {
 	echo "Checking for llvm-4.0" >> $LOG_FILE
 	if [ ! -f /usr/bin/llvm-config-4.0 ]; then
 		echo "LLVM 4.0 not found..."
-		return -1
+		download_and_setup_llvm4_0
 	fi
 
 	echo "+---------[ libclc: configure ]-----------+" >> $LOG_FILE
