@@ -719,7 +719,7 @@ usage(void)
  
 
 int
-main(int argc, char *argv[])
+main_glxgears(int argc, char *argv[])
 {
    unsigned int winWidth = 300, winHeight = 300;
    int x = 0, y = 0;
@@ -807,3 +807,4 @@ main(int argc, char *argv[])
 
    return 0;
 }
+

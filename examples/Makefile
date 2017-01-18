@@ -1,6 +1,6 @@
 all:
-	make -C gears all
+	make -C GL/gears all
 	
 clean:
-	make -C gears clean
+	make -C GL/gears clean
 

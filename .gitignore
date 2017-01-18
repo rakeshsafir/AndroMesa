@@ -1,1 +1,3 @@
-*.pro.user
+*.o
+/lib/*
+/examples/bin/*

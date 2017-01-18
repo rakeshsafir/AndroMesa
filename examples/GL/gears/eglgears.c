@@ -282,7 +282,7 @@ init(void)
 }
 
 int
-main(int argc, char *argv[])
+main_eglgears(int argc, char *argv[])
 {
    eglutInitWindowSize(300, 300);
    eglutInitAPIMask(EGLUT_OPENGL_BIT);
