@@ -1,12 +1,10 @@
-# Cross Compiling libdrm for freedreno
-export PATH=/home/linuxdev/Development/GoPro/Popoyo/POPOYO_EDB/banzai_mnz/precompiled/sysroots/x86_64-linux/usr/bin/arm-oemllib32-linux-gnueabi:$PATH
-./configure --disable-radeon --disable-amdgpu --disable-nouveau --disable-vmwgfx  --enable-freedreno-kgsl --host=arm-oemllib32-linux-gnueabi CFLAGS="-g --sysroot=/home/linuxdev/Development/GoPro/Popoyo/POPOYO_EDB/banzai_mnz/precompiled/sysroots/lib32-apq8053" CXXFLAGS="-g --sysroot=/home/linuxdev/Development/GoPro/Popoyo/POPOYO_EDB/banzai_mnz/precompiled/sysroots/lib32-apq8053"
+#--------[ Building for x86 ]---------
+# libclc
 
-# Cross compiling Mesa
-export PATH=/home/linuxdev/Development/GoPro/Popoyo/POPOYO_EDB/banzai_mnz/precompiled/sysroots/x86_64-linux/usr/bin/arm-oemllib32-linux-gnueabi:$PATH
-./configure --disable-valgrind --with-gallium-drivers="freedreno" --with-dri-drivers="swrast" --with-egl-platforms=drm --host=arm-oemllib32-linux-gnueabi --target=arm-oemllib32-linux-gnueabi --enable-gallium-llvm CFLAGS="-g --sysroot=/home/linuxdev/Development/GoPro/Popoyo/POPOYO_EDB/banzai_mnz/precompiled/sysroots/lib32-apq8053" CXXFLAGS="-g --sysroot=/home/linuxdev/Development/GoPro/Popoyo/POPOYO_EDB/banzai_mnz/precompiled/sysroots/lib32-apq8053" LDFLAGS="-L/home/linuxdev/Development/Mesa/QtProjects/AndroMesa/libdrm/freedreno/.libs" FREEDRENO_LIBS="/home/linuxdev/Development/Mesa/QtProjects/AndroMesa/libdrm/freedreno/.libs" FREEDRENO_CFLAGS="/home/linuxdev/Development/Mesa/QtProjects/AndroMesa/libdrm/freedreno" LIBDRM_CFLAGS="-I/home/linuxdev/Development/Mesa/QtProjects/AndroMesa/libdrm -I/home/linuxdev/Development/Mesa/QtProjects/AndroMesa/libdrm/include/drm" LIBDRM_LIBS="-L/home/linuxdev/Development/Mesa/QtProjects/AndroMesa/libdrm/.libs"
-LIBS="-ldrm_freedreno
-LIBS="/home/linuxdev/Development/GoPro/Popoyo/POPOYO_EDB/banzai_mnz/precompiled/sysroots/lib32-apq8053/usr/lib/crti.o /home/linuxdev/Development/GoPro/Popoyo/POPOYO_EDB/banzai_mnz/precompiled/sysroots/lib32-apq8053/usr/lib/crtn.o"
+./configure --enable-opencl --enable-opencl-icd
+
+
+
 
 
 # Every dri driver has to implement
@@ -18,11 +16,11 @@ struct __DriverAPIRec {
     GLboolean (*CreateContext)(gl_api api,
                                const struct gl_config *glVis,
                                __DRIcontext *driContextPriv,
-			       unsigned major_version,
-			       unsigned minor_version,
-			       uint32_t flags,
+                               unsigned major_version,
+                               unsigned minor_version,
+                               uint32_t flags,
                                bool notify_reset,
-			       unsigned *error,
+                               unsigned *error,
                                void *sharedContextPrivate);
 
     void (*DestroyContext)(__DRIcontext *driContextPriv);

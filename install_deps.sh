@@ -27,6 +27,7 @@ libomxil-bellagio-dev
 llvm
 xutils-dev
 libpciaccess-dev
+libgl1-mesa-dev
 )
 
 
