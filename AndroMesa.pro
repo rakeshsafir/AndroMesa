@@ -4257,5 +4257,6 @@ SOURCES += \
     mesa/src/compiler/nir/nir_to_lcssa.c \
     mesa/src/gallium/state_trackers/nine/nine_buffer_upload.c \
     mesa/src/gallium/state_trackers/nine/nine_queue.c \
-    examples/GL/gears/main.c
+    examples/GL/gears/main.c \
+    examples/CL/probe/devices.c
 
