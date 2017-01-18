@@ -1,8 +1,10 @@
 #!/bin/bash
 
 # This script compiles libdrm and mesa for x86 platform
-LOG_FILE_NAME=build.log
-LOG_FILE=$(readlink -f $LOG_FILE_NAME)
+
+PREFIX_DIR="$(readlink -f .)"/build
+LOG_FILE=$PREFIX_DIR/build.log
+echo "PREFIX_DIR=[$PREFIX_DIR] log=[$LOG_FILE]"
 
 function build_libdrm() {
 	cd libdrm
@@ -17,7 +19,7 @@ function build_libdrm() {
 	fi
 
 	echo "+---------[ libdrm: configure ]-----------+" >> $LOG_FILE
-	2>&1 ./configure --enable-install-test-programs | tee -a $LOG_FILE
+	2>&1 ./configure --prefix=$PREFIX_DIR --enable-install-test-programs | tee -a $LOG_FILE
 	echo "+-------[ libdrm: configure end ]---------+" >> $LOG_FILE
 	if [ $? -ne 0 ]; then
 		echo "libdrm: configure failed..."
@@ -46,17 +48,27 @@ function build_libdrm() {
 	else
 		echo "libdrm: compile success..."
 	fi
+
+	echo "+---------[ libdrm: install ]-----------+" >> $LOG_FILE
+	2>&1 make install | tee -a $LOG_FILE
+	echo "+-------[ libdrm: install end ]---------+" >> $LOG_FILE
+	if [ $? -ne 0 ]; then
+		echo "libdrm: install failed..."
+		exit -1
+	else
+		echo "libdrm: install success..."
+	fi
 	cd ..
 	return 0
 }
 
 function download_and_setup_llvm4_0() {
-#	if [ -z $(cat /etc/apt/sources.list | grep llvm-toolchain-xenial-4.0) ]; then
-#		sudo sh -c "wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -"
-#		sudo sh -c "echo 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main' >> /etc/apt/sources.list"
-#		sudo sh -c "echo 'deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main' >> /etc/apt/sources.list"
-#		sudo apt-get update
-#	fi
+	if [ -z $(cat /etc/apt/sources.list | grep llvm-toolchain-xenial-4.0) ]; then
+		sudo sh -c "wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -"
+		sudo sh -c "echo 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main' >> /etc/apt/sources.list"
+		sudo sh -c "echo 'deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main' >> /etc/apt/sources.list"
+		sudo sh -c "apt-get update"
+	fi
 
 	local LLVM_PACKAGE_LIST=(clang-4.0 
 		clang-4.0-doc 
@@ -97,7 +109,7 @@ function download_and_setup_llvm4_0() {
 function build_libelf() {
 	cd libelf
 	echo "+---------[ libelf: configure ]-----------+" >> $LOG_FILE
-	2>&1 ./configure --enable-debug | tee -a $LOG_FILE
+	2>&1 ./configure --prefix=$PREFIX_DIR --enable-debug | tee -a $LOG_FILE
 	echo "+-------[ libelf: configure end ]---------+" >> $LOG_FILE
 	if [ $? -ne 0 ]; then
 		echo "libelf: configure failed..."
@@ -127,8 +139,16 @@ function build_libelf() {
 		echo "libelf: compile success..."
 	fi
 	
-	export PKG_CONFIG_PATH="$PWD:$PKG_CONFIG_PATH"
-	echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH"
+	echo "+---------[ libelf: install ]-----------+" >> $LOG_FILE
+	2>&1 make install | tee -a $LOG_FILE
+	echo "+-------[ libelf: install end ]---------+" >> $LOG_FILE
+	if [ $? -ne 0 ]; then
+		echo "libelf: install failed..."
+		exit -1
+	else
+		echo "libelf: install success..."
+	fi
+
 	cd ..
 	return 0
 }
@@ -137,12 +157,12 @@ function build_libclc() {
 	cd libclc
 	echo "Checking for llvm-4.0" >> $LOG_FILE
 	if [ ! -f /usr/bin/llvm-config-4.0 ]; then
-		echo "LLVM 4.0 not found..."
+		echo "LLVM 4.0 not found...Installing..." >> $LOG_FILE
 		download_and_setup_llvm4_0
 	fi
 
 	echo "+---------[ libclc: configure ]-----------+" >> $LOG_FILE
-	2>&1 ./configure.py --with-llvm-config=/usr/bin/llvm-config-4.0 | tee -a $LOG_FILE
+	2>&1 ./configure.py --prefix=$PREFIX_DIR --with-llvm-config=/usr/bin/llvm-config-4.0 | tee -a $LOG_FILE
 	echo "+-------[ libclc: configure end ]---------+" >> $LOG_FILE
 	if [ $? -ne 0 ]; then
 		echo "libclc: configure failed..."
@@ -171,8 +191,16 @@ function build_libclc() {
 		echo "libclc: compile success..."
 	fi
 
-	export PKG_CONFIG_PATH="$PWD:$PKG_CONFIG_PATH"
-	echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH"
+	echo "+---------[ libclc: install ]-----------+" >> $LOG_FILE
+	2>&1 make install | tee -a $LOG_FILE
+	echo "+-------[ libclc: install end ]---------+" >> $LOG_FILE
+	if [ $? -ne 0 ]; then
+		echo "libclc: install failed..."
+		exit -1
+	else
+		echo "libclc: install success..."
+	fi
+
 	cd ..
 	return 0
 }
@@ -191,7 +219,7 @@ function build_mesa_with_openCL() {
 
 	echo "+---------[ mesa: configure ]-----------+" >> $LOG_FILE
 	#2>&1 ./configure --enable-opencl --with-gallium-drivers=i915,ilo,nouveau,r300,r600,radeonsi,freedreno,svga,swrast,vc4,virgl --with-llvm-prefix=$(/usr/bin/llvm-config-4.0 --prefix) | tee -a $LOG_FILE
-	2>&1 ./configure --enable-opencl --with-llvm-prefix=$(/usr/bin/llvm-config-4.0 --prefix) | tee -a $LOG_FILE
+	2>&1 ./configure --prefix=$PREFIX_DIR --enable-opencl --enable-opencl-icd --with-dri-drivers= --with-gallium-drivers=i915,nouveau,r300,r600,radeonsi,svga,swrast --with-sysroot=$PREFIX_DIR --with-llvm-prefix=$(/usr/bin/llvm-config-4.0 --prefix) | tee -a $LOG_FILE
 	echo "+-------[ mesa: configure end ]---------+" >> $LOG_FILE
 	if [ $? -ne 0 ]; then
 		echo "mesa: configure failed..."
@@ -212,13 +240,23 @@ function build_mesa_with_openCL() {
 	fi
 
 	echo "+---------[ mesa: compile ]-----------+" >> $LOG_FILE
-	2>&1 make | tee -a $LOG_FILE
+	2>&1 make -j16 | tee -a $LOG_FILE
 	echo "+-------[ mesa: compile end ]---------+" >> $LOG_FILE
 	if [ $? -ne 0 ]; then
 		echo "mesa: compile failed..."
 		exit -1
 	else
 		echo "mesa: compile success..."
+	fi
+
+	echo "+---------[ mesa: install ]-----------+" >> $LOG_FILE
+	2>&1 make install | tee -a $LOG_FILE
+	echo "+-------[ mesa: install end ]---------+" >> $LOG_FILE
+	if [ $? -ne 0 ]; then
+		echo "mesa: install failed..."
+		exit -1
+	else
+		echo "mesa: install success..."
 	fi
 
 	cd ..
@@ -255,6 +293,7 @@ function main() {
 }
 
 # Call main
+mkdir -p $PREFIX_DIR
 main
  
 
