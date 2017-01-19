@@ -23,7 +23,7 @@
 // Simple compute kernel which computes the square of an input array
 //
 const char *KernelSource = "\n" \
-"__kernel void square(                                                       \n" \
+"__kernel void square(                                                  \n" \
 "   __global float* input,                                              \n" \
 "   __global float* output,                                             \n" \
 "   const unsigned int count)                                           \n" \
