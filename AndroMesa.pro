@@ -1,14 +1,17 @@
 CONFIG -=qt
 
 DEFINES +=GLX_DIRECT_RENDERING
+DEFINES +=HAVE_CLOVER_ICD
 
-TARGET = GL.exe
+TARGET = squares.exe
 
 INCLUDEPATH += $$PWD/mesa/include
 INCLUDEPATH += $$PWD/mesa/src/mesa
 INCLUDEPATH += $$PWD/mesa/src/mapi
 INCLUDEPATH += $$PWD/mesa/src/mapi/glapi
 INCLUDEPATH += $$PWD/examples
+INCLUDEPATH += $$PWD/mesa/src/gallium/state_trackers/clover
+INCLUDEPATH += $$PWD/mesa/src/
 
 OTHER_FILES += $$PWD/findings.txt
 
@@ -4258,5 +4261,6 @@ SOURCES += \
     mesa/src/gallium/state_trackers/nine/nine_buffer_upload.c \
     mesa/src/gallium/state_trackers/nine/nine_queue.c \
     examples/GL/gears/main.c \
-    examples/CL/probe/devices.c
+    examples/CL/probe/devices.c \
+    examples/CL/compute/squares.c
 

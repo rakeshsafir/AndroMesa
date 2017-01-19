@@ -208,7 +208,7 @@ function build_libclc() {
 function build_mesa_with_openCL() {
 	cd mesa
 	echo "+---------[ mesa: autogen ]-----------+" | tee -a $LOG_FILE
-	2>&1 ./autogen.sh  --prefix=$PREFIX_DIR --with-sysroot=$PREFIX_DIR --enable-opencl --enable-opencl-icd --with-dri-drivers="" --with-gallium-drivers=i915,nouveau,r300,r600,radeonsi,svga,swrast --with-llvm-prefix=$(/usr/bin/llvm-config-4.0 --prefix) CFLAGS="-I$PREFIX_DIR/include" CXXFLAGS="-I$PREFIX_DIR/include" | tee -a $LOG_FILE
+	2>&1 ./autogen.sh  --prefix="$PREFIX_DIR" --with-sysroot="$PREFIX_DIR" --enable-opencl --enable-opencl-icd --with-dri-drivers="" --with-gallium-drivers=i915,nouveau,r300,r600,radeonsi,svga,swrast --with-llvm-prefix=$(/usr/bin/llvm-config-4.0 --prefix) CFLAGS="-g -I$PREFIX_DIR/include" CXXFLAGS="-g -I$PREFIX_DIR/include" LDFLAGS="-Wl,--export-dynamic" | tee -a $LOG_FILE
 	echo "+-------[ mesa: autogen end ]---------+" | tee -a $LOG_FILE
 	if [ $? -ne 0 ]; then
 		echo "mesa: autogen failed..." | tee -a $LOG_FILE
@@ -217,15 +217,15 @@ function build_mesa_with_openCL() {
 		echo "mesa: autogen success..." | tee -a $LOG_FILE
 	fi
 
-	echo "+---------[ mesa: configure ]-----------+" | tee -a $LOG_FILE
-	2>&1 ./configure --prefix=$PREFIX_DIR --with-sysroot=$PREFIX_DIR --enable-opencl --enable-opencl-icd --with-dri-drivers="" --with-gallium-drivers=i915,nouveau,r300,r600,radeonsi,svga,swrast --with-llvm-prefix=$(/usr/bin/llvm-config-4.0 --prefix) | tee -a $LOG_FILE
-	echo "+-------[ mesa: configure end ]---------+" | tee -a $LOG_FILE
-	if [ $? -ne 0 ]; then
-		echo "mesa: configure failed..." | tee -a $LOG_FILE
-		exit -1
-	else
-		echo "mesa: configure success..." | tee -a $LOG_FILE
-	fi
+#	echo "+---------[ mesa: configure ]-----------+" | tee -a $LOG_FILE
+#	2>&1 ./configure --prefix=$PREFIX_DIR --with-sysroot=$PREFIX_DIR --enable-opencl --enable-opencl-icd --with-dri-drivers="" --with-gallium-drivers=i915,nouveau,r300,r600,radeonsi,svga,swrast --with-llvm-prefix=$(/usr/bin/llvm-config-4.0 --prefix) | tee -a $LOG_FILE
+#	echo "+-------[ mesa: configure end ]---------+" | tee -a $LOG_FILE
+#	if [ $? -ne 0 ]; then
+#		echo "mesa: configure failed..." | tee -a $LOG_FILE
+#		exit -1
+#	else
+#		echo "mesa: configure success..." | tee -a $LOG_FILE
+#	fi
 
 	echo "+---------[ mesa: disable optimization ]-----------+" | tee -a $LOG_FILE
 	sed -ie 's/\ -O2//g' config.status
@@ -266,23 +266,23 @@ function main() {
 	echo "Logging build output in $LOG_FILE"
 	echo "+---------[ Build Start: $(date +%Y-%m-%d:%H:%M:%S) ]-----------+" | tee -a $LOG_FILE
 
-	build_libdrm
-	if [ $? -ne 0 ]; then
-		echo "Building libdrm_failed..." | tee -a $LOG_FILE
-		return -1
-	fi
+#	build_libdrm
+#	if [ $? -ne 0 ]; then
+#		echo "Building libdrm_failed..." | tee -a $LOG_FILE
+#		return -1
+#	fi
 
-	build_libelf
-	if [ $? -ne 0 ]; then
-		echo "Building libelf failed..." | tee -a $LOG_FILE
-		return -1
-	fi
+#	build_libelf
+#	if [ $? -ne 0 ]; then
+#		echo "Building libelf failed..." | tee -a $LOG_FILE
+#		return -1
+#	fi
 
-	build_libclc
-	if [ $? -ne 0 ]; then
-		echo "Building libclc failed..." | tee -a $LOG_FILE
-		return -1
-	fi
+#	build_libclc
+#	if [ $? -ne 0 ]; then
+#		echo "Building libclc failed..." | tee -a $LOG_FILE
+#		return -1
+#	fi
 
 	build_mesa_with_openCL
 	if [ $? -ne 0 ]; then
